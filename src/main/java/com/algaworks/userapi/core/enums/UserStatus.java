@@ -2,7 +2,7 @@ package com.algaworks.userapi.core.enums;
 
 public enum UserStatus {
 
-    ACTICE("ACTIVE"),
+    ACTIVE("ACTIVE"),
     INACTIVE("INACTIVE");
 
     private final String status;

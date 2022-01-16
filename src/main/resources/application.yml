@@ -1,0 +1,33 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:6612/algaworks?useTimezone=true&serverTimezone=America/Sao_Paulo&createIfNotExists=true
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 161493235690-c4k1vhe8f0pm9t08i1qm3b4svb1pi9qe.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+          github:
+            client-id: 8a291141a73a1a7e0456
+            client-secret: df1741699053d08bbd384f6c0c2974112f88cc92
+            scope:
+              - email
+              - profile
