@@ -1,11 +1,11 @@
-package com.algaworks.userapi.infra.jpa.provider;
+package com.algaworks.userapi.infra.persistence.jpa.provider;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.algaworks.userapi.core.entity.User;
 import com.algaworks.userapi.core.gateway.UserGateway;
-import com.algaworks.userapi.infra.jpa.repository.UserJPARepository;
+import com.algaworks.userapi.infra.persistence.jpa.repository.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

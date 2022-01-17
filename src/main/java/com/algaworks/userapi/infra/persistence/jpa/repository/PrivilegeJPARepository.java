@@ -1,4 +1,4 @@
-package com.algaworks.userapi.infra.jpa.repository;
+package com.algaworks.userapi.infra.persistence.jpa.repository;
 
 import java.util.Optional;
 
