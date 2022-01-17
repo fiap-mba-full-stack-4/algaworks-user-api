@@ -4,13 +4,14 @@ import javax.transaction.Transactional;
 
 import java.util.List;
 
-import static com.algaworks.userapi.core.enums.AuthenticationProviderEnum.*;
+import static com.algaworks.userapi.core.enums.AuthenticationProviderEnum.LOCAL;
 import static com.algaworks.userapi.core.enums.UserRoleEnum.ROLE_ADMIN;
 import static com.algaworks.userapi.core.enums.UserRoleEnum.ROLE_USER;
 import static com.algaworks.userapi.core.enums.UserStatus.ACTIVE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+import com.algaworks.userapi.config.exceptions.SetupDataLoaderFailedException;
 import com.algaworks.userapi.core.entity.Privilege;
 import com.algaworks.userapi.core.entity.Role;
 import com.algaworks.userapi.core.entity.User;
@@ -39,26 +40,32 @@ public class SetupDataLoader implements
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if (alreadySetup) return;
+        if (alreadySetup) {
+            return;
+        }
 
         createRoles();
         final var optAdminRole = roleGateway.findByName("ROLE_ADMIN");
 
         optAdminRole.ifPresentOrElse(
                 adminRole -> {
-                    final var user = User.builder()
-                            .email("admin@admin.com")
-                            .name("admin")
-                            .password(passwordEncoder.encode("admin"))
-                            .roles(singletonList(adminRole))
-                            .status(ACTIVE)
-                            .authenticationType(LOCAL)
-                            .build();
+                    final var optUser = userGateway.findByEmail("admin@admin.com");
 
-                    userGateway.save(user);
+                    if (optUser.isEmpty()) {
+                        final var user = User.builder()
+                                .email("admin@admin.com")
+                                .name("admin")
+                                .password(passwordEncoder.encode("admin"))
+                                .roles(singletonList(adminRole))
+                                .status(ACTIVE)
+                                .authenticationType(LOCAL)
+                                .build();
+
+                        userGateway.save(user);
+                    }
                 },
                 () -> {
-                    throw new RuntimeException("Initial load failed...");
+                    throw new SetupDataLoaderFailedException("Setup data loader failed...");
                 }
         );
 

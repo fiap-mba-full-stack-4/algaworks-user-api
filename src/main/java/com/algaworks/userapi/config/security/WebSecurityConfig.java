@@ -29,9 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final LocalLoginSuccessHandler localLoginSuccessHandler;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-    private static final String LOGIN_URI = "/login";
+    private static final String LOGIN_URI = "/users/login";
     private static final String REDIRECT_URI = "/";
-    private static final String LOGOUT_URI = "/logout";
+    private static final String LOGOUT_URI = "/users/logout";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

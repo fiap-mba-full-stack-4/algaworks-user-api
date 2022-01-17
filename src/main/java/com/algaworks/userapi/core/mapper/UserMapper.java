@@ -1,5 +1,8 @@
 package com.algaworks.userapi.core.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.algaworks.userapi.core.entity.User;
 import com.algaworks.userapi.entrypoint.request.user.CreateUserRequest;
 import com.algaworks.userapi.entrypoint.request.user.UpdateUserRequest;
@@ -41,6 +44,13 @@ public class UserMapper {
                 .phoneNumber(user.getPhoneNumber())
                 .status(user.getStatus())
                 .build();
+
+    }
+
+    public List<UserResponse> toResponse(final List<User> userList) {
+        return userList.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
 
     }
 

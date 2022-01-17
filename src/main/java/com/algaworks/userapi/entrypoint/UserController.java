@@ -1,7 +1,6 @@
 package com.algaworks.userapi.entrypoint;
 
-import static com.algaworks.userapi.core.enums.UserRoleEnum.ROLE_ADMIN;
-import static com.algaworks.userapi.core.enums.UserRoleEnum.ROLE_USER;
+import java.util.List;
 
 import com.algaworks.userapi.core.mapper.UserMapper;
 import com.algaworks.userapi.core.usecase.CreateUser;
@@ -29,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/users")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class UserController {
@@ -52,6 +51,14 @@ public class UserController {
         final var password = loginRequest.getPassword();
         loginUser.process(email, password);
         return "/login";
+    }
+
+    @GetMapping
+    @Secured({ROLE_ADMIN, ROLE_USER})
+    public ResponseEntity<List<UserResponse>> findAll() {
+        final var userList = searchUser.findAll();
+        final var userListResponse =  userMapper.toResponse(userList);
+        return ResponseEntity.ok(userListResponse);
     }
 
     @GetMapping("{id}")
