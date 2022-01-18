@@ -30,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     private static final String LOGIN_URI = "/users/login";
-    private static final String REDIRECT_URI = "/";
     private static final String LOGOUT_URI = "/users/logout";
 
     @Override
@@ -50,7 +49,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .userService(customOAuth2UserService)
                     .and()
                     .successHandler(oAuth2LoginSuccessHandler)
-                .defaultSuccessUrl(REDIRECT_URI)
                 .and()
                 .logout()
                     .logoutUrl(LOGOUT_URI)

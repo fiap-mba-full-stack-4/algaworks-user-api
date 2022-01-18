@@ -1,6 +1,5 @@
 package com.algaworks.userapi.config.login.oauth2;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -33,14 +32,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(final HttpServletRequest request,
                                         final HttpServletResponse response,
                                         final Authentication authentication)
-            throws ServletException, IOException, UsernameNotFoundException {
+            throws IOException, UsernameNotFoundException {
         final var oauth2User = (CustomOAuth2User) authentication.getPrincipal();
-        registerOrUpdateUser(oauth2User);
-        super.onAuthenticationSuccess(request, response, authentication);
+        final var user = registerOrUpdateUser(oauth2User);
+        response.sendRedirect(String.format("/users/%d", user.getId()));
     }
 
     @Transactional
-    protected void registerOrUpdateUser(final CustomOAuth2User oauth2User) {
+    protected User registerOrUpdateUser(final CustomOAuth2User oauth2User) {
         final var oauth2ClientName = oauth2User.getOauth2ClientName();
         final var userName = oauth2User.getName();
         final var userEmail = oauth2User.getEmail();
@@ -48,25 +47,30 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
                 AuthenticationProviderEnum.valueOf(oauth2ClientName.toUpperCase(
                         Locale.ROOT));
 
-        userGateway.findByEmail(userEmail)
-                .ifPresentOrElse(
-                        savedUser -> {
-                            if (!authenticationType.equals(savedUser.getAuthenticationType())) {
-                                savedUser.setAuthenticationType(authenticationType);
-                                userGateway.save(savedUser);
-                            }
-                        }
-                        , () -> roleGateway.findByName(ROLE_USER.getName()).ifPresent(savedRole -> {
-                            final var user = User.builder()
-                                    .name(userName)
-                                    .email(userEmail)
-                                    .authenticationType(authenticationType)
-                                    .status(ACTIVE)
-                                    .roles(singletonList(savedRole))
-                                    .build();
+        return userGateway.findByEmail(userEmail)
+                .map(user -> updateUser(user, authenticationType))
+                .orElseGet(() -> createUser(userName, userEmail, authenticationType));
+    }
 
-                            userGateway.save(user);
-                        })
-                );
+    private User updateUser(User user, AuthenticationProviderEnum authenticationType) {
+        user.setAuthenticationType(authenticationType);
+        return userGateway.save(user);
+    }
+
+    private User createUser(String userName, String userEmail,
+                          AuthenticationProviderEnum authenticationType) {
+
+        final var userRole = roleGateway.findByName(ROLE_USER.getName())
+                .orElseThrow();
+
+        final var user = User.builder()
+                .name(userName)
+                .email(userEmail)
+                .authenticationType(authenticationType)
+                .status(ACTIVE)
+                .roles(singletonList(userRole))
+                .build();
+
+        return userGateway.save(user);
     }
 }
