@@ -35,7 +35,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             throws IOException, UsernameNotFoundException {
         final var oauth2User = (CustomOAuth2User) authentication.getPrincipal();
         final var user = registerOrUpdateUser(oauth2User);
-        response.sendRedirect(String.format("/users/%d", user.getId()));
+        response.sendRedirect(String.format("/users/details/%d", user.getId()));
     }
 
     @Transactional
