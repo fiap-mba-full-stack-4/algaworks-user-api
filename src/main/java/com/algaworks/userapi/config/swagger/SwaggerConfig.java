@@ -22,7 +22,6 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
             .apis(RequestHandlerSelectors.basePackage("com.algaworks.userapi"))
             .build()
             .apiInfo(metaData());
-
   }
 
   private ApiInfo metaData() {

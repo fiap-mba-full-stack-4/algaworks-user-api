@@ -40,7 +40,7 @@ public class UserMapper {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .birthday(user.getBirthday())
+                .birthday(user.getBirthday().toString()                          )
                 .phoneNumber(user.getPhoneNumber())
                 .status(user.getStatus())
                 .build();

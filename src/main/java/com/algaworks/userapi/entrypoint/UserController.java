@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Secured({ROLE_ADMIN})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<UserResponse> create(
             @RequestBody final CreateUserRequest createUserRequest
     ) {
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    @Secured({ROLE_ADMIN})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<UserResponse> update(
             @PathVariable final Long id,
             @RequestBody final UpdateUserRequest updateUserRequest) {
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    @Secured({ROLE_ADMIN})
+    @Secured({ROLE_ADMIN, ROLE_USER})
     public ResponseEntity<UserResponse> deleteById(
             @PathVariable(name = "id") final Long id) {
         deleteUser.processById(id);
