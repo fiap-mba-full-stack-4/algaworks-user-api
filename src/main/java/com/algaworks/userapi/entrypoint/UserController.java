@@ -1,17 +1,17 @@
 package com.algaworks.userapi.entrypoint;
 
-import java.util.List;
-
 import com.algaworks.userapi.core.mapper.UserMapper;
 import com.algaworks.userapi.core.usecase.CreateUser;
 import com.algaworks.userapi.core.usecase.InactivateUser;
 import com.algaworks.userapi.core.usecase.LoginUser;
 import com.algaworks.userapi.core.usecase.SearchUser;
+import com.algaworks.userapi.core.usecase.SendUserWelcomeEmail;
 import com.algaworks.userapi.core.usecase.UpdateUser;
 import com.algaworks.userapi.entrypoint.request.user.CreateUserRequest;
 import com.algaworks.userapi.entrypoint.request.user.LoginRequest;
 import com.algaworks.userapi.entrypoint.request.user.UpdateUserRequest;
 import com.algaworks.userapi.entrypoint.response.UserResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,6 +39,7 @@ public class UserController {
     private final UpdateUser updateUser;
     private final InactivateUser deleteUser;
     private final UserMapper userMapper;
+    private final SendUserWelcomeEmail sendEmail;
 
     private final String ROLE_ADMIN = "ROLE_ADMIN";
     private final String ROLE_USER = "ROLE_USER";
@@ -76,6 +77,7 @@ public class UserController {
     ) {
         final var userEntity = createUser.process(createUserRequest);
         final var userResponse =  userMapper.toResponse(userEntity);
+        sendEmail.sendWelcomeEmail(createUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
