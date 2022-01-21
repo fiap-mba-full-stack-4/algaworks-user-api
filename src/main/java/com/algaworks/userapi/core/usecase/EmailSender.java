@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class SendUserWelcomeEmail {
+public class EmailSender {
 
   private final RabbitMQMessageProducer producer;
 
@@ -21,12 +21,12 @@ public class SendUserWelcomeEmail {
   @Value("${rabbitmq.routing-keys.internal-notification}")
   private String internalNotificationRoutingKey;
 
-  public void sendWelcomeEmail(CreateUserRequest createUserRequest) {
+  public void sendWelcomeEmail(final String email, final String username) {
     log.info("## Publishing email notification to queue.");
 
     WelcomeEmailRequest emailRequest = WelcomeEmailRequest.builder()
-        .userEmail(createUserRequest.getEmail())
-        .userName(createUserRequest.getName()).build();
+        .userEmail(email)
+        .userName(username).build();
 
     try {
       producer.publish(emailRequest, internalExchange, internalNotificationRoutingKey);

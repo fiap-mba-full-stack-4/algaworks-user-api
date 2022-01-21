@@ -15,6 +15,7 @@ import com.algaworks.userapi.core.entity.User;
 import com.algaworks.userapi.core.enums.AuthenticationProviderEnum;
 import com.algaworks.userapi.core.gateway.RoleGateway;
 import com.algaworks.userapi.core.gateway.UserGateway;
+import com.algaworks.userapi.core.usecase.EmailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final UserGateway userGateway;
     private final RoleGateway roleGateway;
+    private final EmailSender sendEmail;
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request,
@@ -35,7 +37,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             throws IOException, UsernameNotFoundException {
         final var oauth2User = (CustomOAuth2User) authentication.getPrincipal();
         final var user = registerOrUpdateUser(oauth2User);
-        response.sendRedirect(String.format("/users/details/%d", user.getId()));
+        sendEmail.sendWelcomeEmail(user.getEmail(), user.getUsername());
+        response.sendRedirect(String.format("/users/%d", user.getId()));
     }
 
     @Transactional

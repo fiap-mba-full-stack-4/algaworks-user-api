@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.algaworks.userapi.core.entity.User;
+import com.algaworks.userapi.core.enums.UserStatus;
 import com.algaworks.userapi.entrypoint.request.user.CreateUserRequest;
 import com.algaworks.userapi.entrypoint.request.user.UpdateUserRequest;
 import com.algaworks.userapi.entrypoint.response.UserResponse;
@@ -20,17 +21,16 @@ public class UserMapper {
                 .email(createUserRequest.getEmail())
                 .birthday(createUserRequest.getBirthday())
                 .phoneNumber(createUserRequest.getPhoneNumber())
-                .status(createUserRequest.getStatus())
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
     public User toUser(final UpdateUserRequest updateUserRequest) {
         return User.builder()
                 .name(updateUserRequest.getName())
-                .email(updateUserRequest.getEmail())
                 .birthday(updateUserRequest.getBirthday())
                 .phoneNumber(updateUserRequest.getPhoneNumber())
-                .status(updateUserRequest.getStatus())
+                .status(UserStatus.ACTIVE)
                 .build();
     }
 
@@ -40,8 +40,6 @@ public class UserMapper {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .birthday(user.getBirthday().toString()                          )
-                .phoneNumber(user.getPhoneNumber())
                 .status(user.getStatus())
                 .build();
 
