@@ -1,9 +1,9 @@
 server:
-  port: 8083
+  port: 8092
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:6612/algaworks?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://algaworks-database:3306/algaworks?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo&enabledTLSProtocols=TLSv1.2
     username: root
     password: root
     driverClassName: com.mysql.jdbc.Driver
