@@ -17,8 +17,11 @@ public class UpdateUser {
 
     public User processById(Long id, UpdateUserRequest updateUserRequest) {
         final var userEntity =
-                userGateway.findById(id).orElseThrow(() -> new NotFoundException("a"));
-        final var newUser = userMapper.update(userEntity, updateUserRequest);
+                userGateway.findById(id).orElseThrow(() -> new NotFoundException(
+                        String.format("User {%d} not found", id)
+                ));
+
+        final var newUser = userMapper.updateUser(userEntity, updateUserRequest);
         return userGateway.save(newUser);
     }
 }

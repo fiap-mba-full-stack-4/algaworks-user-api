@@ -1,7 +1,7 @@
 package com.algaworks.userapi.core.usecase;
 
 import com.algaworks.userapi.core.entity.User;
-import com.algaworks.userapi.core.exceptions.UserEmailAlreadyRegisteredException;
+import com.algaworks.userapi.core.exceptions.EmailAlreadyRegisteredException;
 import com.algaworks.userapi.core.gateway.UserGateway;
 import com.algaworks.userapi.core.mapper.UserMapper;
 import com.algaworks.userapi.entrypoint.request.user.CreateUserRequest;
@@ -20,7 +20,7 @@ public class CreateUser {
 
         userGateway.findByEmail(newUserEmail)
                 .ifPresent(user -> {
-                    throw new UserEmailAlreadyRegisteredException(
+                    throw new EmailAlreadyRegisteredException(
                             String.format("The informed e-mail: [%s] is already registered",
                                     newUserEmail)
                     );

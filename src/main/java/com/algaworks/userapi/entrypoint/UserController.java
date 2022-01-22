@@ -3,10 +3,12 @@ package com.algaworks.userapi.entrypoint;
 import com.algaworks.userapi.core.mapper.UserMapper;
 import com.algaworks.userapi.core.usecase.CreateUser;
 import com.algaworks.userapi.core.usecase.InactivateUser;
+import com.algaworks.userapi.core.usecase.LoginUser;
 import com.algaworks.userapi.core.usecase.SearchUser;
 import com.algaworks.userapi.core.usecase.EmailSender;
 import com.algaworks.userapi.core.usecase.UpdateUser;
 import com.algaworks.userapi.entrypoint.request.user.CreateUserRequest;
+import com.algaworks.userapi.entrypoint.request.user.LoginRequest;
 import com.algaworks.userapi.entrypoint.request.user.UpdateUserRequest;
 import com.algaworks.userapi.entrypoint.response.UserResponse;
 import java.util.List;
@@ -30,12 +32,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final LoginUser loginUser;
     private final SearchUser searchUser;
     private final CreateUser createUser;
     private final UpdateUser updateUser;
     private final InactivateUser deleteUser;
     private final UserMapper userMapper;
     private final EmailSender sendEmail;
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<UserResponse> login(
+            @RequestBody final LoginRequest loginRequest
+    ) {
+        final var userEntity =
+                loginUser.process(loginRequest.getEmail(), loginRequest.getPassword());
+        final var userResponse =  userMapper.toResponse(userEntity);
+        sendEmail.sendWelcomeEmail(loginRequest.getEmail(), userEntity.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> findAll() {
@@ -51,7 +65,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<UserResponse> create(
             @RequestBody final CreateUserRequest createUserRequest
     ) {

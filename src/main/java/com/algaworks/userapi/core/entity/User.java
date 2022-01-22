@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import com.algaworks.userapi.core.enums.AuthenticationProviderEnum;
 import com.algaworks.userapi.core.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -60,15 +58,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
     private AuthenticationProviderEnum authenticationType;
-
-    @Column(name = "birthday")
-    private LocalDateTime birthday;
-
-    @Column(name = "profession")
-    private String profession;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")

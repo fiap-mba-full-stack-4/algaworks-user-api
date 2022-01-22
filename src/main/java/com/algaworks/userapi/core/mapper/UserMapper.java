@@ -19,19 +19,15 @@ public class UserMapper {
         return User.builder()
                 .name(createUserRequest.getName())
                 .email(createUserRequest.getEmail())
-                .birthday(createUserRequest.getBirthday())
-                .phoneNumber(createUserRequest.getPhoneNumber())
+                .password(createUserRequest.getPassword())
                 .status(UserStatus.ACTIVE)
                 .build();
     }
 
-    public User toUser(final UpdateUserRequest updateUserRequest) {
-        return User.builder()
-                .name(updateUserRequest.getName())
-                .birthday(updateUserRequest.getBirthday())
-                .phoneNumber(updateUserRequest.getPhoneNumber())
-                .status(UserStatus.ACTIVE)
-                .build();
+    public User updateUser(final User user, final UpdateUserRequest updateUserRequest) {
+        user.setName(updateUserRequest.getName());
+        user.setPassword(updateUserRequest.getPassword());
+        return user;
     }
 
 
@@ -50,11 +46,5 @@ public class UserMapper {
                 .map(this::toResponse)
                 .collect(Collectors.toList());
 
-    }
-
-    public User update(User currentUser, UpdateUserRequest updateUserRequest) {
-        final var updateUser = toUser(updateUserRequest);
-        updateUser.setId(currentUser.getId());
-        return updateUser;
     }
 }

@@ -1,18 +1,27 @@
 package com.algaworks.userapi.entrypoint.request.user;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
-import com.algaworks.userapi.core.enums.UserStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CreateUserRequest {
+@Data
+public class CreateUserRequest implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    @JsonProperty("nome")
     private String name;
+
+    @JsonProperty("email")
     private String email;
-    private LocalDateTime birthday;
-    private String profession;
-    private String phoneNumber;
+
+    @JsonProperty("password")
+    private String password;
 }

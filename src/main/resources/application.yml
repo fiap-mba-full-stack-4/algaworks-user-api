@@ -8,7 +8,7 @@ spring:
     password: root
     driverClassName: com.mysql.jdbc.Driver
   rabbitmq:
-    addresses: localhost:5672
+    addresses: algaworks-rabbitmq:5672
 
   jpa:
     show-sql: true

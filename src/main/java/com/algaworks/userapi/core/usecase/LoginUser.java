@@ -1,6 +1,9 @@
 package com.algaworks.userapi.core.usecase;
 
+import java.util.Objects;
+
 import com.algaworks.userapi.core.entity.User;
+import com.algaworks.userapi.core.exceptions.LoginException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +15,10 @@ public class LoginUser {
 
     public User process(final String email, final String password) {
         final var user = searchUser.byEmail(email);
-        if (user.getPassword().equals(password)) return user;
 
-        throw new RuntimeException("User email or password incorrect.");
+        if (Objects.equals(user.getPassword(), password))
+            return user;
+
+        throw new LoginException("User email or password incorrect.");
     }
 }
